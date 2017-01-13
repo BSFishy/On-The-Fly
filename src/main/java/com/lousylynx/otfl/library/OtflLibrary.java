@@ -13,7 +13,8 @@ public class OtflLibrary extends OtflApi {
 
     private static OtflLibrary INSTANCE;
 
-    private OtflLibrary() { }
+    private OtflLibrary() {
+    }
 
     @Override
     public void initialize() {
@@ -24,6 +25,7 @@ public class OtflLibrary extends OtflApi {
 
     /**
      * Initialize the library
+     *
      * @throws OtflException if the library has already been initialized
      */
     public static void init() throws OtflException {
@@ -35,33 +37,40 @@ public class OtflLibrary extends OtflApi {
 
     /**
      * Get the list of all of the registries
+     *
      * @return the list of registries
      * @throws OtflException if the library has already been initialized
      */
     public static List<BasicRegister> getRegisteries() throws OtflException {
-        checkInit();
+        checkRuntimeInit();
 
         return INSTANCE.getRegisters();
     }
 
     public static void addRegistry(BasicRegister register) throws OtflException {
-        checkInit();
+        checkRuntimeInit();
 
         INSTANCE.addRegister(register);
     }
 
     /**
      * Update the api, to register the objects
+     *
      * @throws OtflException if the library has already been initialized
      */
     public static void register() throws OtflException {
-        checkInit();
+        checkRuntimeInit();
 
         INSTANCE.update();
     }
 
     private static void checkInit() throws OtflException {
-        if(INSTANCE != null)
+        if (INSTANCE != null)
             throw new OtflException("On The Fly Library cannot be initialized multiple times");
+    }
+
+    private static void checkRuntimeInit() throws OtflException {
+        if (INSTANCE == null)
+            throw new OtflException("On The Fly Library has not been initialized");
     }
 }

@@ -1,10 +1,7 @@
 package com.lousylynx.otfl.library.register;
 
 import com.lousylynx.otfl.api.register.BasicRegister;
-import com.lousylynx.otfl.api.register.ObjectType;
+import com.lousylynx.otfl.library.register.object.BlockObject;
 
-public class BlockRegister extends BasicRegister {
-    public BlockRegister() {
-        super(ObjectType.BLOCK);
-    }
+public class BlockRegister extends BasicRegister<BlockObject> {
 }

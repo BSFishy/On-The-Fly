@@ -20,16 +20,17 @@ public abstract class OtflApi {
      * Updates the registers, to add the registered objects
      */
     public void update() throws OtflException {
-        for (BasicRegister register : registers){
+        for (BasicRegister register : registers) {
             register.update();
         }
     }
 
     /**
      * Adds a register to the list of registers
+     *
      * @param register the register to add
      */
-    public void addRegister(BasicRegister register){
+    public void addRegister(BasicRegister register) {
         registers.add(register);
     }
 }
