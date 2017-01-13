@@ -3,8 +3,11 @@ package com.lousylynx.otfl.test;
 import com.lousylynx.otfl.api.OtflException;
 import com.lousylynx.otfl.library.OtflLibrary;
 import com.lousylynx.otfl.library.register.BlockRegister;
+import com.lousylynx.otfl.library.register.ItemRegister;
 import com.lousylynx.otfl.library.register.object.BlockObject;
-import com.lousylynx.otfl.test.block.ExampleBlock;
+import com.lousylynx.otfl.library.register.object.ItemObject;
+import com.lousylynx.otfl.test.object.ExampleBlock;
+import com.lousylynx.otfl.test.object.ExampleItem;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
@@ -39,6 +42,12 @@ public class RegisterCommand implements ICommand {
                 if (r instanceof BlockRegister) {
                     try {
                         r.register(new BlockObject(new ExampleBlock()));
+                    } catch (OtflException e) {
+                        e.printStackTrace();
+                    }
+                } else if(r instanceof ItemRegister) {
+                    try {
+                        r.register(new ItemObject(new ExampleItem()));
                     } catch (OtflException e) {
                         e.printStackTrace();
                     }
