@@ -35,25 +35,8 @@ public class RegisterCommand implements ICommand {
     @Override
     public void execute(MinecraftServer minecraftServer, ICommandSender iCommandSender, String[] strings) throws CommandException {
         try {
-            /*OtflLibrary.instance().getRegisters().forEach(r -> {
-                if (r instanceof BlockRegister) {
-                    try {
-                        r.register(new BlockObject(new ExampleBlock()));
-                    } catch (OtflException e) {
-                        e.printStackTrace();
-                    }
-                } else if (r instanceof ItemRegister) {
-                    try {
-                        r.register(new ItemObject(new ExampleItem()));
-                    } catch (OtflException e) {
-                        e.printStackTrace();
-                    }
-                }
-            });*/
-
             OtflLibrary.instance().register(RegistryObject.fromRegistryEntry(new ExampleBlock()));
             OtflLibrary.instance().register(RegistryObject.fromRegistryEntry(new ExampleItem()));
-            //OtflLibrary.instance().update();
         } catch (OtflException e) {
             e.printStackTrace();
         }

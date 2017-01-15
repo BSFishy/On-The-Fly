@@ -5,14 +5,12 @@ import com.google.common.base.Preconditions;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import com.lousylynx.otfl.OnTheFly;
+import com.lousylynx.otfl.api.register.RegistryObject;
 import lombok.Getter;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
-import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistry;
-import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
-import net.minecraftforge.fml.common.registry.PersistentRegistryManager;
+import net.minecraftforge.fml.common.registry.*;
 import org.apache.logging.log4j.Level;
 
 import java.lang.reflect.Field;
@@ -239,5 +237,48 @@ public class FMLInjector {
         action.set(i, a);
 
         target.set(i, t);
+    }
+
+    private static GameData getGameData() throws NoSuchFieldException, IllegalAccessException {
+        Class<GameData> clazz = GameData.class;
+
+        Field instance = clazz.getDeclaredField("mainData");
+        instance.setAccessible(true);
+
+        return (GameData) instance.get(null);
+    }
+
+    /**
+     * This will get the {@link GameData#iBlockRegistry}
+     * field from the {@link GameData} class
+     * @return the {@link GameData#iBlockRegistry} field value
+     * @throws NoSuchFieldException if there was an error getting the field
+     * @throws IllegalAccessException if there was an error getting the field
+     */
+    public static FMLControlledNamespacedRegistry<?> getGameDataBlockRegistry() throws NoSuchFieldException, IllegalAccessException {
+        GameData instance = getGameData();
+        Class<? extends GameData> clazz = instance.getClass();
+
+        Field registry = clazz.getDeclaredField("iBlockRegistry");
+        registry.setAccessible(true);
+
+        return (FMLControlledNamespacedRegistry<?>) registry.get(instance);
+    }
+
+    /**
+     * This will get the {@link GameData#iItemRegistry}
+     * field from the {@link GameData} class
+     * @return the {@link GameData#iItemRegistry} field value
+     * @throws NoSuchFieldException if there was an error getting the field
+     * @throws IllegalAccessException if there was an error getting the field
+     */
+    public static FMLControlledNamespacedRegistry<?> getGameDataItemRegistry() throws NoSuchFieldException, IllegalAccessException {
+        GameData instance = getGameData();
+        Class<? extends GameData> clazz = instance.getClass();
+
+        Field registry = clazz.getDeclaredField("iItemRegistry");
+        registry.setAccessible(true);
+
+        return (FMLControlledNamespacedRegistry<?>) registry.get(instance);
     }
 }

@@ -2,6 +2,7 @@ package com.lousylynx.otfl.library;
 
 import com.lousylynx.otfl.api.OtflApi;
 import com.lousylynx.otfl.api.OtflException;
+import com.lousylynx.otfl.api.OtflFlags;
 import com.lousylynx.otfl.api.register.RegistryObject;
 import com.lousylynx.otfl.library.register.BlockRegister;
 import com.lousylynx.otfl.library.register.EntityRegister;
@@ -51,7 +52,28 @@ public class OtflLibrary extends OtflApi {
 
     @Override
     public void register(RegistryObject object) {
-        instance().addManager.add(object);
+        register(object, OtflFlags.Registration.USE_FOUND);
+    }
+
+    @Override
+    public void register(IForgeRegistryEntry<?> object) {
+        try {
+            instance().register(RegistryObject.fromRegistryEntry(object));
+        } catch (OtflException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void register(RegistryObject object, int flags){
+        instance().addManager.add(object, flags);
+    }
+
+    public void register(IForgeRegistryEntry<?> object, int flags) {
+        try {
+            instance().register(RegistryObject.fromRegistryEntry(object), flags);
+        } catch (OtflException e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -82,15 +104,6 @@ public class OtflLibrary extends OtflApi {
             return null;
 
         return instance().addedObjects.get(loc);
-    }
-
-    @Override
-    public void register(IForgeRegistryEntry<?> object) {
-        try {
-            instance().register(RegistryObject.fromRegistryEntry(object));
-        } catch (OtflException e) {
-            e.printStackTrace();
-        }
     }
 
     /**

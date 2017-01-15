@@ -1,6 +1,7 @@
 package com.lousylynx.otfl.library.util;
 
 import com.lousylynx.otfl.OnTheFly;
+import com.lousylynx.otfl.api.OtflFlags;
 import com.lousylynx.otfl.api.register.RegistryObject;
 import com.lousylynx.otfl.library.OtflLibrary;
 import com.lousylynx.otfl.library.register.object.BlockObject;
@@ -62,7 +63,7 @@ public class WorldEvents {
             if (OtflLibrary.instance().getAddedObjectNames().contains(new ResourceLocation(mapping.name))) {
                 RegistryObject object = OtflLibrary.instance().getRegistryObjectFromName(mapping.name);
                 if (object instanceof ItemObject || object instanceof BlockObject) {
-                    OtflLibrary.instance().register(object);
+                    OtflLibrary.instance().register(object, OtflFlags.Registration.USE_GAMEDATA);
 
                     try {
                         FMLInjector.setMissingMappingData(mapping, FMLMissingMappingsEvent.Action.REMAP, object.getObject());

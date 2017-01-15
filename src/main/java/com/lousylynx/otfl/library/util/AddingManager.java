@@ -3,6 +3,7 @@ package com.lousylynx.otfl.library.util;
 import com.google.common.base.Preconditions;
 import com.lousylynx.otfl.OnTheFly;
 import com.lousylynx.otfl.api.OtflException;
+import com.lousylynx.otfl.api.OtflFlags;
 import com.lousylynx.otfl.api.register.RegistryObject;
 import com.lousylynx.otfl.library.OtflLibrary;
 import com.lousylynx.otfl.library.register.object.BlockObject;
@@ -33,7 +34,28 @@ public class AddingManager {
      * @param object the object to add
      */
     public void add(RegistryObject object) {
-        IForgeRegistry<?> registryTmp = FMLInjector.findRegistry(object.getObject());
+        add(object, OtflFlags.Registration.USE_FOUND);
+    }
+
+    /**
+     * Add an object to the game. This takes in flags
+     * defined in {@link OtflFlags.Registration}
+     * @param object the object to add
+     * @param flags the flags
+     */
+    public void add(RegistryObject object, int flags){
+        IForgeRegistry<?> registryTmp;
+        if((flags & OtflFlags.Registration.USE_FOUND) == OtflFlags.Registration.USE_FOUND) {
+            registryTmp = FMLInjector.findRegistry(object.getObject());
+        } else {
+            try {
+                registryTmp = object instanceof BlockObject ? FMLInjector.getGameDataBlockRegistry() : object instanceof ItemObject ? FMLInjector.getGameDataItemRegistry() : null;
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                OnTheFly.logf(Level.ERROR, "There was an error registering the object: %s(%s)", object.getObject().getClass().getName(), object.getObject().getClass().getPackage());
+                e.printStackTrace();
+                return;
+            }
+        }
         Preconditions.checkArgument(registryTmp instanceof FMLControlledNamespacedRegistry, "The registry is not an FMLControlledNamespacedRegistry");
 
         FMLControlledNamespacedRegistry registry = (FMLControlledNamespacedRegistry) registryTmp;
