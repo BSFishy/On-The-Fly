@@ -1,6 +1,5 @@
 package com.lousylynx.otfl.api.register;
 
-import com.lousylynx.otfl.api.OtflException;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ public abstract class BasicRegister<T extends RegistryObject> {
      *
      * @param object the object to register
      */
-    public void register(T object) throws OtflException {
+    public void register(T object) {
         registeredObjects.add(object);
     }
 

@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.lousylynx.otfl.OnTheFly;
 import com.lousylynx.otfl.api.OtflException;
 import com.lousylynx.otfl.api.register.RegistryObject;
+import com.lousylynx.otfl.library.OtflLibrary;
 import com.lousylynx.otfl.library.register.object.BlockObject;
 import com.lousylynx.otfl.library.register.object.ItemObject;
 import net.minecraft.util.ResourceLocation;
@@ -37,7 +38,7 @@ public class AddingManager {
 
         FMLControlledNamespacedRegistry registry = (FMLControlledNamespacedRegistry) registryTmp;
 
-        int desiredId = registry.getId(object.getObject());
+        int desiredId = object.getId() >= 0 ? object.getId() : registry.getId(object.getObject());
         BitSet availabilityMap = FMLInjector.getAvailabilityMap(registry);
         if (shouldReplace(availabilityMap, desiredId)) {
             availabilityMap.set(desiredId, false);
@@ -54,6 +55,12 @@ public class AddingManager {
             return;
         }
 
+        if (object.getId() != idToUse) {
+            OnTheFly.logf(Level.INFO, "The object %s got a new id. Previous id: %s New id: %s", object.getObject().getRegistryName(), object.getId(), idToUse);
+            object.setId(idToUse);
+        }
+
+        OtflLibrary.instance().updateObject(object);
         OnTheFly.logf(Level.INFO, "Successfully registered %s(%s) with the ID of %s", object.getObject().getRegistryName(), object.getObject().getClass().getName(),
                 idToUse);
     }

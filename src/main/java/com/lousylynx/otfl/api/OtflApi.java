@@ -21,7 +21,7 @@ public abstract class OtflApi {
     public abstract void register(RegistryObject object);
 
     /**
-     * Register an object from an {@link IForgeRegistryEntry}. <br />
+     * Register an object from an {@link IForgeRegistryEntry}. <br>
      * That means that it can be anything registerable from
      * the OTFL library, such as an item or a block.
      *

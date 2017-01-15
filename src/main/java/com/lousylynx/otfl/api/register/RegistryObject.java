@@ -1,9 +1,12 @@
 package com.lousylynx.otfl.api.register;
 
 import com.lousylynx.otfl.api.OtflException;
+import com.lousylynx.otfl.library.OtflLibrary;
 import com.lousylynx.otfl.library.register.object.BlockObject;
 import com.lousylynx.otfl.library.register.object.ItemObject;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.util.ResourceLocation;
@@ -13,6 +16,10 @@ import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 public abstract class RegistryObject {
 
     private final ObjectType type;
+
+    @Getter
+    @Setter
+    private int id = -1;
 
     /**
      * If the object has a {@link ResourceLocation}
@@ -44,10 +51,13 @@ public abstract class RegistryObject {
      * @throws OtflException if the {@link IForgeRegistryEntry} is not yet supported
      */
     public static RegistryObject fromRegistryEntry(IForgeRegistryEntry<?> impl) throws OtflException {
+        RegistryObject tmp = OtflLibrary.instance().getAddedObjects().get(impl.getRegistryName());
         if (impl instanceof Block) {
-            return new BlockObject((Block) impl);
+            return tmp != null ? tmp : new BlockObject((Block) impl);
         } else if (impl instanceof Item) {
-            return new ItemObject((Item) impl);
+            return tmp != null ? tmp : new ItemObject((Item) impl);
+        } else if (tmp != null) {
+            return tmp;
         } else {
             throw new OtflException("The object %s(%s) is not supported yet", impl, impl.getClass().getPackage());
         }

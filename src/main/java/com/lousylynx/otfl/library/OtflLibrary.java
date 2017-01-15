@@ -7,12 +7,24 @@ import com.lousylynx.otfl.library.register.BlockRegister;
 import com.lousylynx.otfl.library.register.EntityRegister;
 import com.lousylynx.otfl.library.register.ItemRegister;
 import com.lousylynx.otfl.library.util.AddingManager;
+import lombok.Getter;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
+
+import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class OtflLibrary extends OtflApi {
 
     private static OtflLibrary INSTANCE;
-    private static AddingManager addManager;
+    private AddingManager addManager;
+    @Getter
+    private List<ResourceLocation> addedObjectNames = new ArrayList<>();
+    @Getter
+    private Map<ResourceLocation, RegistryObject> addedObjects = new HashMap<>();
 
     private OtflLibrary() {
         addManager = new AddingManager();
@@ -26,18 +38,56 @@ public class OtflLibrary extends OtflApi {
     }
 
     public static OtflLibrary instance() {
+        if (INSTANCE == null) {
+            try {
+                init();
+            } catch (OtflException e) {
+                e.printStackTrace();
+            }
+        }
+
         return INSTANCE;
     }
 
     @Override
     public void register(RegistryObject object) {
-        addManager.add(object);
+        instance().addManager.add(object);
+    }
+
+    /**
+     * This updates the {@link OtflLibrary#addedObjectNames} and
+     * {@link OtflLibrary#addedObjects} fields. This should only
+     * be done unless you know exactly what you're doing.
+     *
+     * @param object the object to update
+     */
+    public void updateObject(RegistryObject object) {
+        if (!instance().addedObjectNames.contains(object.getObject().getRegistryName()))
+            instance().addedObjectNames.add(object.getObject().getRegistryName());
+
+        instance().addedObjects.put(object.getObject().getRegistryName(), object);
+    }
+
+    /**
+     * Get a {@link RegistryObject} from its name from the list
+     * of registered objects
+     *
+     * @param name the name of the object
+     * @return the object
+     */
+    @Nullable
+    public RegistryObject getRegistryObjectFromName(String name) {
+        ResourceLocation loc = new ResourceLocation(name);
+        if (!instance().addedObjectNames.contains(loc))
+            return null;
+
+        return instance().addedObjects.get(loc);
     }
 
     @Override
     public void register(IForgeRegistryEntry<?> object) {
         try {
-            register(RegistryObject.fromRegistryEntry(object));
+            instance().register(RegistryObject.fromRegistryEntry(object));
         } catch (OtflException e) {
             e.printStackTrace();
         }

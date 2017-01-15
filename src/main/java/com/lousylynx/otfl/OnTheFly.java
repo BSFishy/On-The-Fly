@@ -3,14 +3,12 @@ package com.lousylynx.otfl;
 import com.lousylynx.otfl.api.OtflException;
 import com.lousylynx.otfl.library.OtflLibrary;
 import com.lousylynx.otfl.library.util.FMLInjector;
+import com.lousylynx.otfl.library.util.WorldEvents;
 import com.lousylynx.otfl.test.RunTests;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.Mod.Instance;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.event.*;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,5 +58,10 @@ public class OnTheFly {
 
     public static void logf(Level level, String message, Object... replacements) {
         logger.log(level, "[OnTheFlyLibrary] " + String.format(message, (Object[]) replacements));
+    }
+
+    @EventHandler
+    public void fmlMissingMappingsEvent(FMLMissingMappingsEvent event) {
+        WorldEvents.instance().fmlMissingMappingsEvent(event);
     }
 }

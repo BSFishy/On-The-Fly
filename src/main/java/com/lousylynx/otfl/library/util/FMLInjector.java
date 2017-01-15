@@ -7,6 +7,8 @@ import com.google.common.collect.HashBiMap;
 import com.lousylynx.otfl.OnTheFly;
 import lombok.Getter;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
+import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent.MissingMapping;
 import net.minecraftforge.fml.common.registry.FMLControlledNamespacedRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistry;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
@@ -17,7 +19,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.BitSet;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -135,7 +136,7 @@ public class FMLInjector {
         try {
             IForgeRegistryEntry castedObj = (IForgeRegistryEntry) thing;
             if (castedObj.getRegistryName() == null) {
-                OnTheFly.logf(Level.ERROR, "Attempt to register object without having set a registry name {} (type {})", thing, thing.getClass().getName());
+                OnTheFly.logf(Level.ERROR, "Attempt to register object without having set a registry name %s (type %s)", thing, thing.getClass().getName());
                 throw new IllegalArgumentException(String.format("No registry name set for object %s (%s)", new Object[]{thing, thing.getClass().getName()}));
             }
 
@@ -171,7 +172,7 @@ public class FMLInjector {
     /**
      * Get all of the registries for everything in the game
      *
-     * @return a {@link List<FMLControlledNamespacedRegistry>} of all of the registries
+     * @return a {@link List} of all of the registries
      * @throws NoSuchFieldException   if there is no "registries" field in the registry
      * @throws IllegalAccessException if there is an error with accessing the "registries" field
      */
@@ -181,8 +182,9 @@ public class FMLInjector {
 
     /**
      * Get all of the registries and their {@link ResourceLocation} names
+     *
      * @return a {@link BiMap} of all of the registries and their names
-     * @throws NoSuchFieldException if there is an error getting the registries
+     * @throws NoSuchFieldException   if there is an error getting the registries
      * @throws IllegalAccessException if there is an error getting the registries
      */
     public static BiMap<ResourceLocation, FMLControlledNamespacedRegistry<?>> getAllRegistriesAndNames() throws NoSuchFieldException, IllegalAccessException {
@@ -209,9 +211,10 @@ public class FMLInjector {
     /**
      * Get the {@link FMLControlledNamespacedRegistry#minId} field value
      * from an instance
+     *
      * @param registry the instance of the class to get the value from
      * @return the value of the {@link FMLControlledNamespacedRegistry#minId} field
-     * @throws NoSuchFieldException if there was an error getting the value
+     * @throws NoSuchFieldException   if there was an error getting the value
      * @throws IllegalAccessException if there was an error getting the value
      */
     public static int getMinId(FMLControlledNamespacedRegistry<?> registry) throws NoSuchFieldException, IllegalAccessException {
@@ -221,5 +224,20 @@ public class FMLInjector {
         minId.setAccessible(true);
 
         return (int) minId.get(registry);
+    }
+
+    // TODO: don't inject here, inject into GameData#iBlockRegistry etc
+    public static void setMissingMappingData(MissingMapping i, FMLMissingMappingsEvent.Action a, Object t) throws NoSuchFieldException, IllegalAccessException{
+        Class<MissingMapping> missingMappingClass = MissingMapping.class;
+
+        Field action = missingMappingClass.getDeclaredField("action");
+        action.setAccessible(true);
+
+        Field target = missingMappingClass.getDeclaredField("target");
+        target.setAccessible(true);
+
+        action.set(i, a);
+
+        target.set(i, t);
     }
 }
