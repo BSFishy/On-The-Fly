@@ -5,9 +5,8 @@ import com.lousylynx.otfl.api.register.RegistryObject;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.block.Block;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 
 // TODO: finish
 public class BlockObject extends RegistryObject {
@@ -15,7 +14,6 @@ public class BlockObject extends RegistryObject {
     @Getter
     private final Block block;
 
-    @Getter
     @Setter
     private ResourceLocation resource;
 
@@ -32,13 +30,17 @@ public class BlockObject extends RegistryObject {
     }
 
     @Override
-    public void register() {
-        if (resource == null) {
-            GameRegistry.register(block);
-            GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
-        } else {
-            GameRegistry.register(block, resource);
-            GameRegistry.register(new ItemBlock(block).setRegistryName(block.getRegistryName()));
-        }
+    public boolean hasResource() {
+        return resource != null;
+    }
+
+    @Override
+    public ResourceLocation getResource() {
+        return hasResource() ? resource : null;
+    }
+
+    @Override
+    public IForgeRegistryEntry<?> getObject() {
+        return block;
     }
 }

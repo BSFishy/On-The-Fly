@@ -2,6 +2,7 @@ package com.lousylynx.otfl;
 
 import com.lousylynx.otfl.api.OtflException;
 import com.lousylynx.otfl.library.OtflLibrary;
+import com.lousylynx.otfl.library.util.FMLInjector;
 import com.lousylynx.otfl.test.RunTests;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -10,6 +11,9 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 @Mod(modid = OnTheFly.MODID, version = OnTheFly.VERSION)
 public class OnTheFly {
@@ -18,11 +22,15 @@ public class OnTheFly {
 
     public static final boolean DEBUG = true;
 
+    private static Logger logger = LogManager.getLogger(MODID);
+
     @Instance
     public static OnTheFly INSTANCE;
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        FMLInjector.inject();
+
         try {
             OtflLibrary.init();
         } catch (OtflException e) {
@@ -44,5 +52,13 @@ public class OnTheFly {
         if (DEBUG) {
             RunTests.start(event);
         }
+    }
+
+    public static void log(String message) {
+        logf(Level.INFO, message);
+    }
+
+    public static void logf(Level level, String message, Object... replacements) {
+        logger.log(level, "[OnTheFlyLibrary] " + String.format(message, (Object[]) replacements));
     }
 }

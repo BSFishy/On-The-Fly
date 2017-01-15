@@ -23,9 +23,8 @@ public abstract class BasicRegister<T extends RegistryObject> {
         registeredObjects.add(object);
     }
 
-    /**
+    /*
      * Updates all of the registered objects to be added to the runtime
-     */
     public void update() throws OtflException {
         for (RegistryObject object : registeredObjects) {
             if (!object.isAdded()) {
@@ -33,5 +32,5 @@ public abstract class BasicRegister<T extends RegistryObject> {
                 object.setAdded(true);
             }
         }
-    }
+    }*/
 }

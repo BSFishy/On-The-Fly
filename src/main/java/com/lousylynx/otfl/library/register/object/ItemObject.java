@@ -4,26 +4,23 @@ import com.lousylynx.otfl.api.register.ObjectType;
 import com.lousylynx.otfl.api.register.RegistryObject;
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.block.Block;
 import net.minecraft.item.Item;
-import net.minecraft.item.ItemBlock;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 
 // TODO: finish
 public class ItemObject extends RegistryObject {
 
     @Getter
-    private final Item block;
+    private final Item item;
 
-    @Getter
     @Setter
     private ResourceLocation resource;
 
-    public ItemObject(Item block) {
+    public ItemObject(Item item) {
         super(ObjectType.BLOCK);
 
-        this.block = block;
+        this.item = item;
     }
 
     public ItemObject(Item block, ResourceLocation resource) {
@@ -33,11 +30,17 @@ public class ItemObject extends RegistryObject {
     }
 
     @Override
-    public void register() {
-        if (resource == null) {
-            GameRegistry.register(block);
-        } else {
-            GameRegistry.register(block, resource);
-        }
+    public boolean hasResource() {
+        return resource != null;
+    }
+
+    @Override
+    public ResourceLocation getResource() {
+        return hasResource() ? resource : null;
+    }
+
+    @Override
+    public IForgeRegistryEntry<?> getObject() {
+        return item;
     }
 }
