@@ -23,6 +23,7 @@ import java.util.Map;
 public class OtflLibrary extends OtflApi {
 
     private static OtflLibrary INSTANCE;
+    @Getter
     private AddingManager addManager;
     @Getter
     private List<ResourceLocation> addedObjectNames = new ArrayList<>();
@@ -66,12 +67,11 @@ public class OtflLibrary extends OtflApi {
     public void register(RegistryObject object) {
         Preconditions.checkArgument(addedObjectNames.contains(object.getObject().getRegistryName()), object.getObject().getRegistryName() + " was attempted to be added before it was added");
 
-        register(object, OtflFlags.Registration.USE_FOUND);
+        object.register();
     }
 
     @Override
     public void register(IForgeRegistryEntry<?> object) {
-
         try {
             instance().register(RegistryObject.fromRegistryEntry(object));
         } catch (OtflException e) {

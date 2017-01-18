@@ -2,6 +2,7 @@ package com.lousylynx.otfl.library.register.object;
 
 import com.lousylynx.otfl.api.register.ObjectType;
 import com.lousylynx.otfl.api.register.RegistryObject;
+import com.lousylynx.otfl.library.OtflLibrary;
 import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.item.Item;
@@ -27,6 +28,11 @@ public class ItemObject extends RegistryObject {
         this(block);
 
         this.resource = resource;
+    }
+
+    @Override
+    public void register(int flags) {
+        OtflLibrary.instance().getAddManager().add(this, flags);
     }
 
     @Override

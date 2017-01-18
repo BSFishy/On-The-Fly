@@ -52,10 +52,6 @@ public class WorldEvents {
     public void onWorldLoad(WorldEvent.Load event) {
         try {
             if(!remappedObjects.isEmpty()) {
-                /*for (RegistryObject object : remappedObjects) {
-                    FMLInjector.removeAlias(object);
-                    remappedObjects.remove(object);
-                }*/
                 Iterator<RegistryObject> objectIterator = remappedObjects.iterator();
 
                 while(objectIterator.hasNext()){
@@ -86,11 +82,17 @@ public class WorldEvents {
         for (FMLMissingMappingsEvent.MissingMapping mapping : event.getAll()) {
             if (OtflLibrary.instance().getAddedObjectNames().contains(new ResourceLocation(mapping.name))) {
                 RegistryObject object = OtflLibrary.instance().getRegistryObjectFromName(mapping.name);
+                if(remappedObjects.contains(object))
+                    continue;
+
                 if (object instanceof ItemObject || object instanceof BlockObject) {
-                    OtflLibrary.instance().register(object, OtflFlags.Registration.USE_GAMEDATA);
+                    object.register(OtflFlags.Registration.USE_GAMEDATA);
 
                     try {
                         FMLInjector.setMissingMappingData(mapping, FMLMissingMappingsEvent.Action.REMAP, object.getObject());
+                        if(object instanceof BlockObject)
+                            FMLInjector.setMissingMappingData(mapping, FMLMissingMappingsEvent.Action.REMAP, ((BlockObject) object).getItemObject());
+
                         remappedObjects.add(object);
                     } catch (NoSuchFieldException | IllegalAccessException e) {
                         OnTheFly.logf(Level.WARN, "Unable to remap %s", mapping.name);

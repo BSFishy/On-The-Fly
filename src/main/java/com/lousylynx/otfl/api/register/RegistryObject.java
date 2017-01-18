@@ -1,6 +1,7 @@
 package com.lousylynx.otfl.api.register;
 
 import com.lousylynx.otfl.api.OtflException;
+import com.lousylynx.otfl.api.OtflFlags;
 import com.lousylynx.otfl.library.OtflLibrary;
 import com.lousylynx.otfl.library.register.object.BlockObject;
 import com.lousylynx.otfl.library.register.object.ItemObject;
@@ -20,6 +21,19 @@ public abstract class RegistryObject {
     @Getter
     @Setter
     private int id = -1;
+
+    /**
+     * This registers this instance of this object to the registry
+     */
+    public void register(){
+        register(OtflFlags.Registration.USE_FOUND);
+    }
+
+    /**
+     *
+     * @param flags
+     */
+    public abstract void register(int flags);
 
     /**
      * If the object has a {@link ResourceLocation}

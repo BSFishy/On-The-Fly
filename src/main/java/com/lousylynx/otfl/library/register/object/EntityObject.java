@@ -12,6 +12,11 @@ public class EntityObject extends RegistryObject {
     }
 
     @Override
+    public void register(int flags) {
+
+    }
+
+    @Override
     public boolean hasResource() {
         return false;
     }
