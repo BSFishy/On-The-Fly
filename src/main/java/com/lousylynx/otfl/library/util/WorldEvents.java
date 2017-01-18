@@ -8,8 +8,13 @@ import com.lousylynx.otfl.library.register.object.BlockObject;
 import com.lousylynx.otfl.library.register.object.ItemObject;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.fml.common.event.FMLMissingMappingsEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Level;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * This is a class full of events that have to do
@@ -19,6 +24,7 @@ import org.apache.logging.log4j.Level;
 public class WorldEvents {
 
     private static WorldEvents instance;
+    private static List<RegistryObject> remappedObjects = new ArrayList<>();
 
     /**
      * Register this class of events to
@@ -41,10 +47,17 @@ public class WorldEvents {
         return instance;
     }
 
-    /*@SubscribeEvent
+    @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
-        //event.getWorld()
-    }*/
+        try {
+            for(RegistryObject object : remappedObjects) {
+                FMLInjector.removeAlias(object);
+                remappedObjects.remove(object);
+            }
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
      * This event is called whenever there is a mapping
@@ -67,6 +80,7 @@ public class WorldEvents {
 
                     try {
                         FMLInjector.setMissingMappingData(mapping, FMLMissingMappingsEvent.Action.REMAP, object.getObject());
+                        remappedObjects.add(object);
                     } catch (NoSuchFieldException | IllegalAccessException e) {
                         OnTheFly.logf(Level.WARN, "Unable to remap %s", mapping.name);
                         e.printStackTrace();

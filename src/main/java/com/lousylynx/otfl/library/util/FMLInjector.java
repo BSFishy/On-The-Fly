@@ -18,6 +18,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.BitSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 /**
@@ -216,7 +217,7 @@ public class FMLInjector {
      * @throws IllegalAccessException if there was an error getting the value
      */
     public static int getMinId(FMLControlledNamespacedRegistry<?> registry) throws NoSuchFieldException, IllegalAccessException {
-        Class<FMLControlledNamespacedRegistry<?>> registryClass = (Class<FMLControlledNamespacedRegistry<?>>) registry.getClass();
+        Class<FMLControlledNamespacedRegistry> registryClass = FMLControlledNamespacedRegistry.class;
 
         Field minId = registryClass.getDeclaredField("minId");
         minId.setAccessible(true);
@@ -280,5 +281,28 @@ public class FMLInjector {
         registry.setAccessible(true);
 
         return (FMLControlledNamespacedRegistry<?>) registry.get(instance);
+    }
+
+    /**
+     * This method will remove a {@link RegistryObject}
+     * from any aliases it might have.
+     * @param object the {@link RegistryObject} to remove the aliases from
+     * @throws NoSuchFieldException if there was an error changing the value
+     * @throws IllegalAccessException if there was an error changing the value
+     */
+    public static void removeAlias(RegistryObject object) throws NoSuchFieldException, IllegalAccessException {
+        IForgeRegistry<?> registryTmp = findRegistry(object.getObject());
+        Preconditions.checkArgument(registryTmp instanceof  FMLControlledNamespacedRegistry<?>, "The registry is not the right type");
+
+        FMLControlledNamespacedRegistry<?> registry = (FMLControlledNamespacedRegistry) registryTmp;
+        Class<FMLControlledNamespacedRegistry> clazz = FMLControlledNamespacedRegistry.class;
+
+        Field aliasesField = clazz.getDeclaredField("aliases");
+        aliasesField.setAccessible(true);
+
+        Map<ResourceLocation, ResourceLocation> aliases = (Map<ResourceLocation, ResourceLocation>) aliasesField.get(registry);
+        aliases.remove(object.getObject().getRegistryName());
+
+        aliasesField.set(registry, aliases);
     }
 }

@@ -70,6 +70,8 @@ public class AddingManager {
         try {
             idToUse = desiredId >= 0 ? desiredId : availabilityMap.nextClearBit(FMLInjector.getMinId(registry));
 
+            FMLInjector.removeAlias(object);
+
             FMLInjector.add(idToUse, object.getObject().getRegistryName(), object.getObject());
         } catch (NoSuchFieldException | IllegalAccessException e) {
             OnTheFly.logf(Level.ERROR, "There was an error registering the object: %s(%s)", object.getObject().getClass().getName(), object.getObject().getClass().getPackage());
