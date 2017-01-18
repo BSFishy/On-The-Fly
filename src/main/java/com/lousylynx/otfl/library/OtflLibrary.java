@@ -1,5 +1,6 @@
 package com.lousylynx.otfl.library;
 
+import com.google.common.base.Preconditions;
 import com.lousylynx.otfl.api.OtflApi;
 import com.lousylynx.otfl.api.OtflException;
 import com.lousylynx.otfl.api.OtflFlags;
@@ -9,6 +10,7 @@ import com.lousylynx.otfl.library.register.EntityRegister;
 import com.lousylynx.otfl.library.register.ItemRegister;
 import com.lousylynx.otfl.library.util.AddingManager;
 import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.registry.IForgeRegistryEntry;
 
@@ -26,6 +28,9 @@ public class OtflLibrary extends OtflApi {
     private List<ResourceLocation> addedObjectNames = new ArrayList<>();
     @Getter
     private Map<ResourceLocation, RegistryObject> addedObjects = new HashMap<>();
+    @Setter
+    @Getter
+    private static boolean preInit = false;
 
     private OtflLibrary() {
         addManager = new AddingManager();
@@ -50,13 +55,23 @@ public class OtflLibrary extends OtflApi {
         return INSTANCE;
     }
 
+    public void add(RegistryObject object) {
+        Preconditions.checkState(preInit, "You can only add objects in the preInit phase");
+
+        addedObjectNames.add(object.getObject().getRegistryName());
+        addedObjects.put(object.getObject().getRegistryName(), object);
+    }
+
     @Override
     public void register(RegistryObject object) {
+        Preconditions.checkArgument(addedObjectNames.contains(object.getObject().getRegistryName()), object.getObject().getRegistryName() + " was attempted to be added before it was added");
+
         register(object, OtflFlags.Registration.USE_FOUND);
     }
 
     @Override
     public void register(IForgeRegistryEntry<?> object) {
+
         try {
             instance().register(RegistryObject.fromRegistryEntry(object));
         } catch (OtflException e) {
@@ -84,8 +99,8 @@ public class OtflLibrary extends OtflApi {
      * @param object the object to update
      */
     public void updateObject(RegistryObject object) {
-        if (!instance().addedObjectNames.contains(object.getObject().getRegistryName()))
-            instance().addedObjectNames.add(object.getObject().getRegistryName());
+        /*if (!instance().addedObjectNames.contains(object.getObject().getRegistryName()))
+            instance().addedObjectNames.add(object.getObject().getRegistryName());*/
 
         instance().addedObjects.put(object.getObject().getRegistryName(), object);
     }

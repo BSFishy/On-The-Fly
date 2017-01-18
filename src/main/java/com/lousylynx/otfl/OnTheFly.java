@@ -27,6 +27,8 @@ public class OnTheFly {
 
     @EventHandler
     public void preInit(FMLPreInitializationEvent event) {
+        OtflLibrary.setPreInit(true);
+
         FMLInjector.inject();
 
         try {
@@ -34,10 +36,15 @@ public class OnTheFly {
         } catch (OtflException e) {
             e.printStackTrace();
         }
+
+        if(DEBUG) {
+            RunTests.preInit();
+        }
     }
 
     @EventHandler
     public void init(FMLInitializationEvent event) {
+        OtflLibrary.setPreInit(false);
     }
 
     @EventHandler

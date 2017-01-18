@@ -14,6 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.apache.logging.log4j.Level;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -24,7 +25,7 @@ import java.util.List;
 public class WorldEvents {
 
     private static WorldEvents instance;
-    private static List<RegistryObject> remappedObjects = new ArrayList<>();
+    private final List<RegistryObject> remappedObjects = new ArrayList<>();
 
     /**
      * Register this class of events to
@@ -50,9 +51,19 @@ public class WorldEvents {
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
         try {
-            for(RegistryObject object : remappedObjects) {
-                FMLInjector.removeAlias(object);
-                remappedObjects.remove(object);
+            if(!remappedObjects.isEmpty()) {
+                /*for (RegistryObject object : remappedObjects) {
+                    FMLInjector.removeAlias(object);
+                    remappedObjects.remove(object);
+                }*/
+                Iterator<RegistryObject> objectIterator = remappedObjects.iterator();
+
+                while(objectIterator.hasNext()){
+                    RegistryObject object = objectIterator.next();
+
+                    FMLInjector.removeAlias(object);
+                    objectIterator.remove();
+                }
             }
         } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
