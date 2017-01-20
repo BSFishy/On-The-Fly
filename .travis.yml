@@ -2,9 +2,9 @@ language: java
 jdk: oraclejdk8
 
 install: "./gradlew setupCIWorkspace"
-script: \
-    "./gradlew build" \
-    "./gradlew check"
+script:
+ - "./gradlew build"
+ - "./gradlew check"
 after_success: "./gradlew bintrayUpload"
 
 notifications:
