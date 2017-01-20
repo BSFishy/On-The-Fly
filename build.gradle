@@ -37,7 +37,7 @@ semver {
 
     snapshotBump = 'PATCH' // 'MAJOR', 'MINOR', or 'PATCH'
 
-    forceBump = false // true or false
+    forceBump = true // true or false
 }
 
 minecraft {
