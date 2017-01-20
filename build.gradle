@@ -29,6 +29,11 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 //version = major + "." + minor + "." + micro
+project.afterEvaluate {
+    assert project.version
+    version = project.version
+}
+
 group= "com.lousylynx.otfl"
 archivesBaseName = "otfl"
 
