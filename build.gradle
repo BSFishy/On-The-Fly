@@ -9,6 +9,7 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'com.github.tagc:semver-plugin:0.5.1'
     }
 }
 
@@ -22,13 +23,22 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'checkstyle'
+apply plugin: 'semver'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version = major + "." + minor + "." + micro
+//version = major + "." + minor + "." + micro
 group= "com.lousylynx.otfl"
 archivesBaseName = "otfl"
+
+semver {
+    versionFilePath = 'version.properties'
+
+    snapshotBump = 'PATCH' // 'MAJOR', 'MINOR', or 'PATCH'
+
+    forceBump = false // true or false
+}
 
 minecraft {
     version = "1.10.2-12.18.3.2185"
