@@ -3,7 +3,6 @@ package com.lousylynx.otfl.library;
 import com.google.common.base.Preconditions;
 import com.lousylynx.otfl.api.OtflApi;
 import com.lousylynx.otfl.api.OtflException;
-import com.lousylynx.otfl.api.OtflFlags;
 import com.lousylynx.otfl.api.register.RegistryObject;
 import com.lousylynx.otfl.library.register.BlockRegister;
 import com.lousylynx.otfl.library.register.EntityRegister;
@@ -79,7 +78,7 @@ public class OtflLibrary extends OtflApi {
         }
     }
 
-    public void register(RegistryObject object, int flags){
+    public void register(RegistryObject object, int flags) {
         instance().addManager.add(object, flags);
     }
 

@@ -40,12 +40,13 @@ public class AddingManager {
     /**
      * Add an object to the game. This takes in flags
      * defined in {@link OtflFlags.Registration}
+     *
      * @param object the object to add
-     * @param flags the flags
+     * @param flags  the flags
      */
-    public void add(RegistryObject object, int flags){
+    public void add(RegistryObject object, int flags) {
         IForgeRegistry<?> registryTmp;
-        if((flags & OtflFlags.Registration.USE_FOUND) == OtflFlags.Registration.USE_FOUND) {
+        if ((flags & OtflFlags.Registration.USE_FOUND) == OtflFlags.Registration.USE_FOUND) {
             registryTmp = FMLInjector.findRegistry(object.getObject());
         } else {
             try {

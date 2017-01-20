@@ -37,7 +37,7 @@ public class OnTheFly {
             e.printStackTrace();
         }
 
-        if(DEBUG) {
+        if (DEBUG) {
             RunTests.preInit();
         }
     }

@@ -17,7 +17,6 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.BitSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -171,7 +170,7 @@ public class FMLInjector {
     /**
      * Get all of the registries for everything in the game
      *
-     * @return a {@link List} of all of the registries
+     * @return a {@link java.util.List} of all of the registries
      * @throws NoSuchFieldException   if there is no "registries" field in the registry
      * @throws IllegalAccessException if there is an error with accessing the "registries" field
      */
@@ -226,7 +225,7 @@ public class FMLInjector {
     }
 
     // TODO: don't inject here, inject into GameData#iBlockRegistry etc
-    public static void setMissingMappingData(MissingMapping i, FMLMissingMappingsEvent.Action a, Object t) throws NoSuchFieldException, IllegalAccessException{
+    public static void setMissingMappingData(MissingMapping i, FMLMissingMappingsEvent.Action a, Object t) throws NoSuchFieldException, IllegalAccessException {
         Class<MissingMapping> missingMappingClass = MissingMapping.class;
 
         Field action = missingMappingClass.getDeclaredField("action");
@@ -252,8 +251,9 @@ public class FMLInjector {
     /**
      * This will get the {@link GameData#iBlockRegistry}
      * field from the {@link GameData} class
+     *
      * @return the {@link GameData#iBlockRegistry} field value
-     * @throws NoSuchFieldException if there was an error getting the field
+     * @throws NoSuchFieldException   if there was an error getting the field
      * @throws IllegalAccessException if there was an error getting the field
      */
     public static FMLControlledNamespacedRegistry<?> getGameDataBlockRegistry() throws NoSuchFieldException, IllegalAccessException {
@@ -269,8 +269,9 @@ public class FMLInjector {
     /**
      * This will get the {@link GameData#iItemRegistry}
      * field from the {@link GameData} class
+     *
      * @return the {@link GameData#iItemRegistry} field value
-     * @throws NoSuchFieldException if there was an error getting the field
+     * @throws NoSuchFieldException   if there was an error getting the field
      * @throws IllegalAccessException if there was an error getting the field
      */
     public static FMLControlledNamespacedRegistry<?> getGameDataItemRegistry() throws NoSuchFieldException, IllegalAccessException {
@@ -286,13 +287,14 @@ public class FMLInjector {
     /**
      * This method will remove a {@link RegistryObject}
      * from any aliases it might have.
+     *
      * @param object the {@link RegistryObject} to remove the aliases from
-     * @throws NoSuchFieldException if there was an error changing the value
+     * @throws NoSuchFieldException   if there was an error changing the value
      * @throws IllegalAccessException if there was an error changing the value
      */
     public static void removeAlias(RegistryObject object) throws NoSuchFieldException, IllegalAccessException {
         IForgeRegistry<?> registryTmp = findRegistry(object.getObject());
-        Preconditions.checkArgument(registryTmp instanceof  FMLControlledNamespacedRegistry<?>, "The registry is not the right type");
+        Preconditions.checkArgument(registryTmp instanceof FMLControlledNamespacedRegistry<?>, "The registry is not the right type");
 
         FMLControlledNamespacedRegistry<?> registry = (FMLControlledNamespacedRegistry) registryTmp;
         Class<FMLControlledNamespacedRegistry> clazz = FMLControlledNamespacedRegistry.class;

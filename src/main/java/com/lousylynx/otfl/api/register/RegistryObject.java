@@ -25,12 +25,11 @@ public abstract class RegistryObject {
     /**
      * This registers this instance of this object to the registry
      */
-    public void register(){
+    public void register() {
         register(OtflFlags.Registration.USE_FOUND);
     }
 
     /**
-     *
      * @param flags
      */
     public abstract void register(int flags);

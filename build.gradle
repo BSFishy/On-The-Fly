@@ -14,16 +14,19 @@ buildscript {
 
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.8'
-    id 'java'
+    id "com.jfrog.bintray" version "1.7"
 }
 
+apply plugin: 'java'
+apply plugin: 'maven'
+apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'checkstyle'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-version = "0.1"
+version = major + "." + minor + "." + micro
 group= "com.lousylynx.otfl"
 archivesBaseName = "otfl"
 
@@ -54,5 +57,61 @@ processResources
     // copy everything else, thats not the mcmod.info
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
+    }
+}
+
+jar {
+    include "com/lousylynx/otfl/**"
+    include "assets/**"
+    include "mcmod.info"
+}
+
+task deobfJar(type: Jar) {
+    from sourceSets.main.output
+    classifier 'deobf'
+}
+
+task apiJar(type: Jar, dependsOn: 'sourceMainJava') {
+    from sourceSets.main.allSource
+    from sourceSets.main.output
+    include 'com/lousylynx/otfl/api/**/*'
+    include 'com/lousylynx/otfl/library/**/*'
+    include 'com/lousylynx/otfl/OnTheFly'
+    classifier 'api'
+}
+
+artifacts {
+    archives deobfJar
+    archives apiJar
+    archives sourceJar
+    archives jar
+}
+
+publishing {
+    publications {
+        MyPublication(MavenPublication) {
+            groupId = project.group
+            artifactId = project.archivesBaseName
+            version = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
+            artifact deobfJar
+            artifact sourceJar
+            artifact apiJar
+            artifact jar
+        }
+    }
+}
+
+bintray {
+    user = System.getenv('BINTRAY_USER')
+    key = System.getenv('BINTRAY_KEY')
+    publications = ['MyPublication']
+    publish = true
+    pkg {
+        repo = 'dev'
+        name = 'On-The-Fly'
+        version {
+            name = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
+            released = new Date()
+        }
     }
 }

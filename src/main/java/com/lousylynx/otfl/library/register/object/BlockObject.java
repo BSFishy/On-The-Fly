@@ -38,11 +38,11 @@ public class BlockObject extends RegistryObject {
         OtflLibrary.instance().getAddManager().add(getItemObject());
     }
 
-    public Item getItem(){
+    public Item getItem() {
         return new ItemBlock((Block) getObject()).setRegistryName(getObject().getRegistryName());
     }
 
-    public ItemObject getItemObject(){
+    public ItemObject getItemObject() {
         return new ItemObject(getItem());
     }
 

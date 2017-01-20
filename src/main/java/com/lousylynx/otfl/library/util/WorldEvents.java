@@ -51,10 +51,10 @@ public class WorldEvents {
     @SubscribeEvent
     public void onWorldLoad(WorldEvent.Load event) {
         try {
-            if(!remappedObjects.isEmpty()) {
+            if (!remappedObjects.isEmpty()) {
                 Iterator<RegistryObject> objectIterator = remappedObjects.iterator();
 
-                while(objectIterator.hasNext()){
+                while (objectIterator.hasNext()) {
                     RegistryObject object = objectIterator.next();
 
                     FMLInjector.removeAlias(object);
@@ -82,7 +82,7 @@ public class WorldEvents {
         for (FMLMissingMappingsEvent.MissingMapping mapping : event.getAll()) {
             if (OtflLibrary.instance().getAddedObjectNames().contains(new ResourceLocation(mapping.name))) {
                 RegistryObject object = OtflLibrary.instance().getRegistryObjectFromName(mapping.name);
-                if(remappedObjects.contains(object))
+                if (remappedObjects.contains(object))
                     continue;
 
                 if (object instanceof ItemObject || object instanceof BlockObject) {
@@ -90,7 +90,7 @@ public class WorldEvents {
 
                     try {
                         FMLInjector.setMissingMappingData(mapping, FMLMissingMappingsEvent.Action.REMAP, object.getObject());
-                        if(object instanceof BlockObject)
+                        if (object instanceof BlockObject)
                             FMLInjector.setMissingMappingData(mapping, FMLMissingMappingsEvent.Action.REMAP, ((BlockObject) object).getItemObject());
 
                         remappedObjects.add(object);
