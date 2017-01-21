@@ -118,7 +118,7 @@ bintray {
         repo = 'dev'
         name = 'On-The-Fly'
         version {
-            name = projectVersion + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
+            name = (projectVersion - "-SNAPSHOT") + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
             released = new Date()
         }
     }
