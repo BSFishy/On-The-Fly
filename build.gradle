@@ -27,11 +27,12 @@ apply plugin: 'checkstyle'
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-String projectVersion = project.version.toString()
+String compileVersion = project.version.toString()
+String bintrayVersion = project.version.toString() - "-SNAPSHOT"
+project.version = bintrayVersion
 group= "com.lousylynx.otfl"
 archivesBaseName = "otfl"
 
-//project.version.with { major = 2; minor= 3; patch = 4; preRelease = "beta1"; releaseBuild = true }
 minecraft {
     version = "1.10.2-12.18.3.2185"
     runDir = "run"
@@ -45,7 +46,7 @@ dependencies {
 processResources
 {
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", projectVersion
+    inputs.property "version", compileVersion
     inputs.property "mcversion", project.minecraft.version
 
     // replace stuff in mcmod.info, nothing else
@@ -53,7 +54,7 @@ processResources
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':projectVersion, 'mcversion':project.minecraft.version
+        expand 'version':compileVersion, 'mcversion':project.minecraft.version
     }
         
     // copy everything else, thats not the mcmod.info
@@ -94,7 +95,7 @@ publishing {
         MyPublication(MavenPublication) {
             groupId = project.group
             artifactId = project.archivesBaseName
-            version = projectVersion + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
+            version = bintrayVersion + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
             artifact deobfJar
             artifact sourceJar
             artifact apiJar
@@ -118,7 +119,7 @@ bintray {
         repo = 'dev'
         name = 'On-The-Fly'
         version {
-            name = (projectVersion - "-SNAPSHOT") + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
+            name = (bintrayVersion - "-SNAPSHOT") + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
             released = new Date()
         }
     }
