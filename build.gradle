@@ -9,13 +9,13 @@ buildscript {
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
-        classpath 'com.github.tagc:semver-plugin:0.5.1'
     }
 }
 
 plugins {
     id 'io.franzbecker.gradle-lombok' version '1.8'
     id "com.jfrog.bintray" version "1.7"
+    id 'ch.netzwerg.release' version '1.2.4'
 }
 
 apply plugin: 'java'
@@ -23,28 +23,15 @@ apply plugin: 'maven'
 apply plugin: 'maven-publish'
 apply plugin: 'net.minecraftforge.gradle.forge'
 apply plugin: 'checkstyle'
-apply plugin: 'semver'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-//version = major + "." + minor + "." + micro
-project.afterEvaluate {
-    assert project.version
-    version = project.version
-}
-
+String projectVersion = project.version.toString()
 group= "com.lousylynx.otfl"
 archivesBaseName = "otfl"
 
-semver {
-    versionFilePath = 'version.properties'
-
-    snapshotBump = 'PATCH' // 'MAJOR', 'MINOR', or 'PATCH'
-
-    forceBump = true // true or false
-}
-
+//project.version.with { major = 2; minor= 3; patch = 4; preRelease = "beta1"; releaseBuild = true }
 minecraft {
     version = "1.10.2-12.18.3.2185"
     runDir = "run"
@@ -58,7 +45,7 @@ dependencies {
 processResources
 {
     // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
+    inputs.property "version", projectVersion
     inputs.property "mcversion", project.minecraft.version
 
     // replace stuff in mcmod.info, nothing else
@@ -66,7 +53,7 @@ processResources
         include 'mcmod.info'
                 
         // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
+        expand 'version':projectVersion, 'mcversion':project.minecraft.version
     }
         
     // copy everything else, thats not the mcmod.info
@@ -107,7 +94,7 @@ publishing {
         MyPublication(MavenPublication) {
             groupId = project.group
             artifactId = project.archivesBaseName
-            version = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
+            version = projectVersion + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
             artifact deobfJar
             artifact sourceJar
             artifact apiJar
@@ -120,13 +107,30 @@ bintray {
     user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_KEY')
     publications = ['MyPublication']
-    publish = true
+
+    if(user != null) {
+        publish = true
+    } else {
+        publish = false
+    }
+
     pkg {
         repo = 'dev'
         name = 'On-The-Fly'
         version {
-            name = project.version + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
+            name = projectVersion + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
             released = new Date()
         }
     }
+}
+
+release {
+    dependsOn build
+
+    if(System.getenv('BINTRAY_USER') != null){
+        push = true
+    }
+
+    versionSuffix = '-SNAPSHOT'
+    tagPrefix = 'v'
 }
