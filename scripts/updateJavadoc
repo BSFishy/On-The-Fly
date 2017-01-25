@@ -15,7 +15,7 @@ REPO=`git config remote.origin.url`
 SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
 SHA=`git rev-parse --verify HEAD`
 
-rm -r gh-pages
+#rm -r gh-pages
 
 echo "-----------------------------------------------"
 echo "Cloning the current repository into gh-pages"
