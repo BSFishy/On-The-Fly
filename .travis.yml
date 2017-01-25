@@ -5,6 +5,7 @@ install: "./gradlew setupCIWorkspace"
 script:
  - "./gradlew build"
 after_success:
+ - "./scripts/updateJavadoc"
  - "./gradlew bintrayUpload"
 
 notifications:
