@@ -92,7 +92,7 @@ artifacts {
 
 publishing {
     publications {
-        MyPublication(MavenPublication) {
+        otfl(MavenPublication) {
             groupId = project.group
             artifactId = project.archivesBaseName
             version = bintrayVersion + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
@@ -107,7 +107,7 @@ publishing {
 bintray {
     user = System.getenv('BINTRAY_USER')
     key = System.getenv('BINTRAY_KEY')
-    publications = ['MyPublication']
+    publications = ['otfl']
 
     if(user != null) {
         publish = true
@@ -119,7 +119,7 @@ bintray {
         repo = 'dev'
         name = 'On-The-Fly'
         version {
-            name = (bintrayVersion - "-SNAPSHOT") + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
+            name = bintrayVersion + '-' + System.getenv('TRAVIS_BUILD_NUMBER')
             released = new Date()
         }
     }
