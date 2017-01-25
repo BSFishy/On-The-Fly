@@ -7,7 +7,6 @@ TARGET_BRANCH="gh-pages"
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify
 if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]; then
     echo "Skipping deploy; just doing a build."
-    doCompile
     exit 0
 fi
 
@@ -16,15 +15,27 @@ REPO=`git config remote.origin.url`
 SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
 SHA=`git rev-parse --verify HEAD`
 
+rm -r gh-pages
+
+echo "-----------------------------------------------"
+echo "Cloning the current repository into gh-pages"
+echo "-----------------------------------------------"
 git clone --depth=50 --branch=gh-pages https://github.com/LousyLynx/On-The-Fly.git gh-pages
 
+echo "-----------------------------------------------"
+echo "Compiling the javadoc information"
+echo "-----------------------------------------------"
 ./gradlew javadoc
+
+echo "-----------------------------------------------"
+echo "Getting ready to upload the new javadoc"
+echo "-----------------------------------------------"
 cd gh-pages
 
 git config user.email "mttprvstanddad@gmail.com"
 git config user.name "Lousy Lynx"
 
-cp ../build/docs/javadoc/* javadoc
+cp -r ../build/docs/javadoc/** javadoc
 git add .
 git commit -m "Updating javadoc"
 
@@ -40,6 +51,9 @@ chmod 600 deploy_key
 eval `ssh-agent -s`
 ssh-add deploy_key
 
+echo "-----------------------------------------------"
+echo "Uploading the new javadoc"
+echo "-----------------------------------------------"
 # Now that we're all set up, we can push.
 git push ${SSH_REPO} ${TARGET_BRANCH}
 
