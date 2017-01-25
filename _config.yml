@@ -1,5 +1,4 @@
 theme: jekyll-theme-minimal
-exclude: [wiki]
 
 gems:
   - jekyll-sitemap
