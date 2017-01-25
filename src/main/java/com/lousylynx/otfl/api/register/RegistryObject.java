@@ -30,7 +30,7 @@ public abstract class RegistryObject {
     }
 
     /**
-     * @param flags
+     * @param flags The flags that the object should be registered with
      */
     public abstract void register(int flags);
 
