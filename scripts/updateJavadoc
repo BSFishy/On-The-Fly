@@ -8,3 +8,5 @@ cp ../build/docs/javadoc/* wiki
 git add .
 git commit -m "Updating javadoc"
 git push https://github.com/LousyLynx/On-The-Fly.git gh-pages
+
+cd ../
