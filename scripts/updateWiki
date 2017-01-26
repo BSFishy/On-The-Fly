@@ -1,0 +1,4 @@
+#!/usr/bin/env bash
+
+rake wiki
+#rake wikibuild
