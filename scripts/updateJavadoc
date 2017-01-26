@@ -40,7 +40,7 @@ echo "-----------------------------------------------"
 cd gh-pages
 
 git config user.email "mttprvstanddad@gmail.com"
-git config user.name "Lousy Lynx"
+git config user.name "LousyLynx"
 
 cp -r ../build/docs/javadoc/** javadoc
 git add .
