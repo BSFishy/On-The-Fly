@@ -3,6 +3,7 @@ set -e # Exit with nonzero exit code if anything fails
 
 SOURCE_BRANCH="master"
 TARGET_BRANCH="gh-pages"
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 # Pull requests and commits to other branches shouldn't try to deploy, just build to verify
 if [ "$TRAVIS_PULL_REQUEST" != "false" -o "$TRAVIS_BRANCH" != "$SOURCE_BRANCH" ]; then
@@ -16,11 +17,17 @@ SSH_REPO=${REPO/https:\/\/github.com\//git@github.com:}
 SHA=`git rev-parse --verify HEAD`
 
 #rm -r gh-pages
-
-echo "-----------------------------------------------"
-echo "Cloning the current repository into gh-pages"
-echo "-----------------------------------------------"
-git clone --depth=50 --branch=gh-pages https://github.com/LousyLynx/On-The-Fly.git gh-pages
+if [ $("${DIR}/is_dir" gh-pages) == "YES" ]
+then
+    rm -r gh-pages
+fi
+if [ $("${DIR}/is_dir" gh-pages) == "NO" ]
+then
+    echo "-----------------------------------------------"
+    echo "Cloning the current repository into gh-pages"
+    echo "-----------------------------------------------"
+    git clone --depth=50 --branch=gh-pages https://github.com/LousyLynx/On-The-Fly.git gh-pages
+fi
 
 echo "-----------------------------------------------"
 echo "Compiling the javadoc information"

@@ -1,4 +1,15 @@
 #!/usr/bin/env bash
 
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
+if [ $("${DIR}/is_dir" gh-pages) == "NO" ]
+then
+    git clone --depth=50 --branch=gh-pages https://github.com/LousyLynx/On-The-Fly.git gh-pages
+fi
+
+cd gh-pages
+
 rake wiki
+
+cd ../
 #rake wikibuild
