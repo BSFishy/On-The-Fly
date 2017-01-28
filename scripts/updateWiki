@@ -58,3 +58,7 @@ git push ${SSH_REPO} ${TARGET_BRANCH}
 
 cd ../
 #rake wikibuild
+
+echo "-----------------------------------------------"
+echo "Successfully updated wiki"
+echo "-----------------------------------------------"
