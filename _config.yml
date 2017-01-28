@@ -44,4 +44,4 @@ wikiToJekyll:
   wiki_dest: "wiki"
 
   # commit and push to Jekyll repository after wiki synchronisation
-  commit_and_push: true
+  commit_and_push: false

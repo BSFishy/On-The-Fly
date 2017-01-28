@@ -1,6 +1,9 @@
 # IDE
-On The Fly Library.ipr
-On The Fly Library.iws
+*.ipr
+*.iws
 
 # Jekyll
 _site
+
+# Other
+deploy_key
