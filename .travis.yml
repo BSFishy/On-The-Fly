@@ -3,7 +3,7 @@ jdk: oraclejdk8
 
 env:
   global:
-  - ENCRYPTION_LABEL: "f3e8b7e5d5db"
+  - ENCRYPTION_LABEL: "7bb7dfe9ff97"
 
 install: "./gradlew setupCIWorkspace"
 script:
